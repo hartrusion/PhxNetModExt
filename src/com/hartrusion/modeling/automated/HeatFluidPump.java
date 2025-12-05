@@ -266,7 +266,12 @@ public class HeatFluidPump implements Runnable {
                 }
                 break;
             case 5: // Pump is running
-                // nothing to automate so far
+                if (!safeOff) { // safety failure
+                    state = 0;
+                    pumpState = PumpState.OFFLINE;
+                    operateCloseSuctionValve();
+                    operateCloseDischargeValve();
+                }
                 break;
         }
     }
