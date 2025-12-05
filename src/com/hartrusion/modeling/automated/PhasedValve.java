@@ -31,50 +31,16 @@ import com.hartrusion.mvc.ActionCommand;
  *
  * @author Viktor Alexander Hartung
  */
-public class PhasedValve implements Runnable {
+public class PhasedValve extends BaseAutomatedValve implements Runnable {
 
-    protected final PhasedLinearValve valve = new PhasedLinearValve();
-    protected final SetpointIntegrator swControl
-            = new SetpointIntegrator();
-    private final ValveActuatorMonitor monitor
-            = new ValveActuatorMonitor();
-    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    
     /**
-     * Updated output values (valve position) will be set to this parameter
-     * handler.
+     * The valve element of the model itself.
      */
-    private ParameterHandler outputValues;
-
-    public PhasedValve() {
-        swControl.setMaxRate(25);
-        swControl.setUpperLimit(100);
-        swControl.setLowerLimit(-5.0);
-    }
+    protected final PhasedLinearValve valve = new PhasedLinearValve();
 
     public void initName(String name) {
+        super.initName(name);
         valve.setName(name);
-        monitor.setName(name);
-    }
-    
-    /**
-     * Sets a ParameterHandler that will get the valve position on each run
-     * call.
-     *
-     * @param h reference to ParameterHandler
-     */
-    public void registerParameterHandler(ParameterHandler h) {
-        outputValues = h;
-    }
-
-    /**
-     *
-     * @param signalListener Instance that will receive the event changes from
-     * valves and pumps.
-     */
-    public void registerSignalListener(PropertyChangeListener signalListener) {
-        pcs.addPropertyChangeListener(signalListener);
-        monitor.addPropertyChangeListener(signalListener);
     }
 
     /**
@@ -93,7 +59,7 @@ public class PhasedValve implements Runnable {
         } else {
             valve.setCharacteristic(true, 0.0);
         }
-        
+
     }
 
     public void initOpening(double opening) {
@@ -112,11 +78,25 @@ public class PhasedValve implements Runnable {
 
     @Override
     public void run() {
+        if (safeOpenProvider != null) {
+            safeOpen = safeOpenProvider.getAsBoolean();
+        }
+        if (safeClosedProvider != null) {
+            safeClosed = safeClosedProvider.getAsBoolean();
+        }
+        
+        // Force valve open or closed if safety signal is missing
+        if (!safeClosed) {
+            swControl.setInputMin();
+        } else if (!safeOpen) {
+            swControl.setInputMax();
+        }
+        
         swControl.run();
         valve.setOpening(swControl.getOutput());
         monitor.setInput(swControl.getOutput());
         monitor.run();
-        
+
         // Send valve position as parameter value for monitoring
         if (outputValues != null) {
             outputValues.setParameterValue(valve.toString(),
@@ -124,65 +104,7 @@ public class PhasedValve implements Runnable {
         }
     }
 
-    public void operateOpenValve() {
-        swControl.setInputMax();
-    }
-
-    public void operateCloseValve() {
-        swControl.setInputMin();
-    }
-    
-    public void operateSetOpening(double opening) {
-        swControl.setInput(opening);
-    }
-
-    public void stopValve() {
-        swControl.setStop();
-    }
-
-    public double getOpening() {
-        return swControl.getOutput();
-    }
-
     public PhasedLinearValve getValveElement() {
         return valve;
-    }
-    
-    public SetpointIntegrator getIntegrator() {
-        return swControl;
-    }
-
-    /**
-     * Allows processing received events by the class itself. The Property name
-     * must begin with the same name as this classes elements, which was
-     * initialized with the initName function call.
-     *
-     * @param ac ActionCommand, will be further checked if it's matching.
-     * @return true if event was processed by this instance.
-     */
-    public boolean handleAction(ActionCommand ac) {
-        if (!ac.getPropertyName().equals(valve.toString())) {
-            return false;
-        }
-        // Int values are sent from so-called Integral switches, as long as they
-        // are pressed, value integrates. The press sends a +1 or -1 and the
-        // release of the button sends a 0, but this is done with default.
-        if (ac.getValue() instanceof Integer) {
-            switch ((int) ac.getValue()) {
-                case -1 ->
-                        operateCloseValve();
-                case +1 ->
-                        operateOpenValve();
-                default ->
-                        stopValve();
-            }
-        } else if (ac.getValue() instanceof Boolean) {
-            if ((boolean) ac.getValue()) {
-                operateOpenValve();
-            } else {
-                operateCloseValve();
-            }
-        }
-        return true;
     }
 }
