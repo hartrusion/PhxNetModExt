@@ -80,6 +80,10 @@ public class PhasedValveControlled extends PhasedValve {
 
     @Override
     public void run() {
+        if (!safeOpen || !safeClosed) { // disable auto mode on safety override
+            controller.setManualMode(true);
+        }
+        
         // Write the output of the controller to the Valve SWI if the
         // controller is in auto mode
         if (!controller.isManualMode()) {
