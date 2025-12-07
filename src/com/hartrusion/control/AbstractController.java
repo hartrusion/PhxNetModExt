@@ -49,8 +49,8 @@ public abstract class AbstractController implements Runnable {
     protected DoubleSupplier inputProvider;
     protected DoubleSupplier followUpProvider;
 
-    private String controllerName;
-    private String componentControlState;
+    private String controllerName = "unnamed";
+    private String componentControlState = "unnamedControlState";
 
     /**
      * Events from controller, namely switching from manual to auto, will be
