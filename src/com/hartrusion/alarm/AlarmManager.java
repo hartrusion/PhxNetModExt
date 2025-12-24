@@ -23,10 +23,13 @@
  */
 package com.hartrusion.alarm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 /**
  * Holds all active alarm objects. It manages those objects by itself, meaning
@@ -38,6 +41,11 @@ public class AlarmManager {
 
     private final Map<String, AlarmObject> alarmObjects
             = new ConcurrentHashMap<>();
+    
+    /**
+     * A list that contains all active alarms
+     */
+    private final List<AlarmObject> alarmList = new ArrayList<>();
 
     /**
      * Sets an alarm. Can be used to update or initialize an AlarmObject.
@@ -66,6 +74,8 @@ public class AlarmManager {
                 .log(Level.INFO, "Updated Alarm: " + component
                         + ", Old state: " + oldState
                         + ", New state: " + state);
+        
+        updateAlarmList();
     }
 
     /**
@@ -94,5 +104,24 @@ public class AlarmManager {
         }
         // check if equals or even a higher priority is active. 
         return ComparePriority.includes(alarmObject.getState(), state);
+    }
+
+    /**
+     * Updates the contents of the alarm list which can be displayed in a swing
+     * JList.
+     */
+    public void updateAlarmList() {
+        // Todo, make this with some kind of diff thingy
+        alarmList.clear();
+        for (AlarmObject a : alarmObjects.values()) { 
+            if (a != null && a.getState() != AlarmState.NONE
+                    && !a.isSuppressed()) { 
+                alarmList.add(a);
+            } 
+        }
+    }
+    
+    public List getAlarmList() {
+        return alarmList;
     }
 }

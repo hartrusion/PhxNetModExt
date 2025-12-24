@@ -45,7 +45,7 @@ public class AlarmObject {
 
     @Override
     public String toString() {
-        return component;
+        return component  + " [" + state + "]";
     }
 
     public String getDescription() {
