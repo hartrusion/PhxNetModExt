@@ -63,11 +63,11 @@ jobs:
             tmpdir=$(mktemp -d)
             unzip -q "$ZIP_FILE" -d "$tmpdir" || (echo "  unzip failed or no files in $ZIP_FILE"; rm -rf "$tmpdir" "$ZIP_FILE"; continue)
             found=false
-            # find jar files in extracted artifact and copy to lib with repo prefix
+            # find jar files in extracted artifact and copy to lib without repo prefix
             while IFS= read -r -d '' jar; do
               found=true
               bn=$(basename "$jar")
-              dest="lib/${safe_prefix}-${bn}"
+              dest="lib/${bn}"
               echo "    Copying $jar -> $dest"
               cp -f "$jar" "$dest"
             done < <(find "$tmpdir" -type f -name '*.jar' -print0)
