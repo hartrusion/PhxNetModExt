@@ -96,6 +96,8 @@ public class HeatFluidPump implements Runnable {
         dischargeControl.setMaxRate(15);
         dischargeControl.setUpperLimit(100);
         dischargeControl.setLowerLimit(-5.0);
+        
+        pump.setEffort(0.0);
     }
 
     /**

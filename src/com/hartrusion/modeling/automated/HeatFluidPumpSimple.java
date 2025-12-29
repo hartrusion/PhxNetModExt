@@ -86,6 +86,8 @@ public class HeatFluidPumpSimple implements Runnable {
         dischargeControl.setMaxRate(15);
         dischargeControl.setUpperLimit(100);
         dischargeControl.setLowerLimit(-5.0);
+        
+        pump.setEffort(0.0);
     }
 
     /**
@@ -232,7 +234,12 @@ public class HeatFluidPumpSimple implements Runnable {
                     switchOnTime = Instant.now();
                     // Switch on:
                     pumpState = PumpState.RUNNING;
-                    pump.setEffort(totalHead);
+                    pump.setEffort(-totalHead);
+                    // Total head has to be negative as this source is connected 
+                    // reversed. The non-simple class has both sides connected
+                    // inside and therefore under control, this is not the case
+                    // for this element here. The first one is towards discharge
+                    // and that way the sign has to be negative.
                 } else if (!ready) { // abort
                     state = 0;
                     pumpState = PumpState.OFFLINE;
