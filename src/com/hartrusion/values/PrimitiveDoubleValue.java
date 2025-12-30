@@ -48,6 +48,20 @@ public class PrimitiveDoubleValue extends AbstractValue {
     private float[] values10 = new float[601];
     private float[] values20 = new float[601];
     private float[] values50 = new float[601];
+    
+    PrimitiveDoubleValue() {
+        // initialize all with NaN, used to mark that there is no value 
+        // available yet.
+        for (int idx = 0; idx < 601; idx++) {
+            values1[idx] = Float.NaN;
+            values2[idx] = Float.NaN;
+            values5[idx] = Float.NaN;
+            values10[idx] = Float.NaN;
+            values20[idx] = Float.NaN;
+            values50[idx] = Float.NaN;
+            
+        }
+    }
 
     public double getValue() {
         return value;
