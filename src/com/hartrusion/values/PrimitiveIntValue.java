@@ -21,17 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.hartrusion.control;
+package com.hartrusion.values;
 
 /**
  *
  * @author Viktor Alexander Hartung
  */
-public interface ParameterReceiver {
+public class PrimitiveIntValue extends AbstractValue {
+    private int value;
 
-    public void setParameterValue(String component, boolean value);
+    public int getValue() {
+        return value;
+    }
 
-    public void setParameterValue(String component, double value);
-    
-    public void setParameterValue(String component, int value);
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

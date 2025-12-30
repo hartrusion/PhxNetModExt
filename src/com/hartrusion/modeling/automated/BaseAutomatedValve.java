@@ -23,7 +23,7 @@
  */
 package com.hartrusion.modeling.automated;
 
-import com.hartrusion.control.ParameterHandler;
+import com.hartrusion.values.ValueHandler;
 import com.hartrusion.control.SetpointIntegrator;
 import com.hartrusion.control.ValveActuatorMonitor;
 import com.hartrusion.mvc.ActionCommand;
@@ -49,7 +49,7 @@ public abstract class BaseAutomatedValve {
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    protected ParameterHandler outputValues;
+    protected ValueHandler outputValues;
 
     protected boolean safeOpen = true;
     protected BooleanSupplier safeOpenProvider;
@@ -86,7 +86,7 @@ public abstract class BaseAutomatedValve {
      *
      * @param h reference to ParameterHandler
      */
-    public void registerParameterHandler(ParameterHandler h) {
+    public void registerParameterHandler(ValueHandler h) {
         outputValues = h;
     }
 

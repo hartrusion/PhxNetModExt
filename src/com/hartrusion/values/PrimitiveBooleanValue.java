@@ -21,21 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.hartrusion.control;
+package com.hartrusion.values;
 
 /**
  *
  * @author Viktor Alexander Hartung
  */
-public abstract class AbstractParameter {
-    private String component;
+public class PrimitiveBooleanValue extends AbstractValue {
+    private boolean value;
 
-    public String getComponent() {
-        return component;
+    public boolean isValue() {
+        return value;
     }
 
-    public void setComponent(String component) {
-        this.component = component;
-    }    
-    
+    public void setValue(boolean value) {
+        this.value = value;
+    }
 }

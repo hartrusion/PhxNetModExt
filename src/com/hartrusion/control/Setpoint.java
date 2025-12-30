@@ -23,6 +23,7 @@
  */
 package com.hartrusion.control;
 
+import com.hartrusion.values.ValueHandler;
 import com.hartrusion.mvc.ActionCommand;
 
 /**
@@ -40,7 +41,7 @@ import com.hartrusion.mvc.ActionCommand;
  */
 public class Setpoint extends SetpointIntegrator {
 
-    private ParameterHandler outputValues;
+    private ValueHandler outputValues;
 
     private String name;
 
@@ -53,7 +54,7 @@ public class Setpoint extends SetpointIntegrator {
      *
      * @param h reference to ParameterHandler
      */
-    public void registerParameterHandler(ParameterHandler h) {
+    public void registerParameterHandler(ValueHandler h) {
         outputValues = h;
     }
 

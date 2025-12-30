@@ -16,7 +16,7 @@
  */
 package com.hartrusion.modeling.automated;
 
-import com.hartrusion.control.ParameterHandler;
+import com.hartrusion.values.ValueHandler;
 import com.hartrusion.control.Setpoint;
 import com.hartrusion.control.ValveActuatorMonitor;
 import java.beans.PropertyChangeListener;
@@ -47,7 +47,7 @@ public class HeatControlledFlowSource implements Runnable {
      * Updated output values (valve position) will be set to this parameter
      * handler.
      */
-    private ParameterHandler outputValues;
+    private ValueHandler outputValues;
 
     /**
      * Value in kg/s that will flow on 100 % valve position.
@@ -82,7 +82,7 @@ public class HeatControlledFlowSource implements Runnable {
      *
      * @param h reference to ParameterHandler
      */
-    public void registerParameterHandler(ParameterHandler h) {
+    public void registerParameterHandler(ValueHandler h) {
         outputValues = h;
     }
 

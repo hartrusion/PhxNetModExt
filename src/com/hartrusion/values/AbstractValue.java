@@ -21,20 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.hartrusion.control;
+package com.hartrusion.values;
 
 /**
  *
  * @author Viktor Alexander Hartung
  */
-public class PrimitiveDoubleParameter extends AbstractParameter {
-    private double value;
+public abstract class AbstractValue {
+    private String component;
 
-    public double getValue() {
-        return value;
+    public String getComponent() {
+        return component;
     }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+    public void setComponent(String component) {
+        this.component = component;
+    }    
+    
 }

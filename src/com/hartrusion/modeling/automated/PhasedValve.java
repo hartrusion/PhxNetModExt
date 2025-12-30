@@ -16,7 +16,7 @@
  */
 package com.hartrusion.modeling.automated;
 
-import com.hartrusion.control.ParameterHandler;
+import com.hartrusion.values.ValueHandler;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
