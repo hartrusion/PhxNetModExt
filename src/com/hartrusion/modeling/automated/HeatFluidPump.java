@@ -273,7 +273,8 @@ public class HeatFluidPump implements Runnable {
                     pumpState = PumpState.OFFLINE;
                     operateCloseSuctionValve();
                     operateCloseDischargeValve();
-                } else if (suctionControl.getOutput() < 20) {
+                } else if (suctionControl.getOutput() < 5.0) {
+                    // closing of suction valve will shut off the pump
                     state = 0;
                     pumpState = PumpState.OFFLINE;
                 }
