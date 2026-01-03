@@ -24,6 +24,17 @@
 package com.hartrusion.control;
 
 /**
+ * A proportional-integral controller (PI) with output limitation and output
+ * limit feedback. The integral part of the controller will be limited to not
+ * run away when the output value is at its limit. This has two effects: The
+ * controller won't need time to get back to its operation point after any
+ * potential overshoot over the output limitation. On the other hand, the
+ * limited integral might result in a behavior of the controller raising the
+ * output value even if the input is still negative if the input is rising
+ * faster than the hold down integral part is still being pushed down by the
+ * integral. To prevent such a behavior, a value controlling controller can be
+ * set to an output limit value of -5 to let the controller run negative on
+ * purpose.
  *
  * @author Viktor Alexander Hartung
  */
@@ -38,13 +49,13 @@ public class PIControl extends AbstractController {
     @Override
     public void run() {
         super.run();
-        
+
         double dIntegral;
 
         if (stopIntegrator || controlState != ControlCommand.AUTOMATIC) {
             dIntegral = 0;
         } else {
-            dIntegral = eInput * stepTime / TN;
+            dIntegral = eInput * kR * stepTime / TN;
         }
 
         double proportionalPart = eInput * kR;
@@ -85,10 +96,22 @@ public class PIControl extends AbstractController {
         this.kR = kR;
     }
 
+    /**
+     * Defines after what amount of time the output has reached K times input.
+     * Note that the integral part is multiplied with K also.
+     *
+     * @return TN Integral time constant (in Seconds), Initial value: 10 s
+     */
     public double getParameterTN() {
         return TN;
     }
 
+    /**
+     * Defines after what amount of time the output has reached K times input.
+     * Note that the integral part is multiplied with K also.
+     *
+     * @param TN Time constant to set (in Seconds), Initial value: 10 s
+     */
     public void setParameterTN(double TN) {
         this.TN = TN;
     }
