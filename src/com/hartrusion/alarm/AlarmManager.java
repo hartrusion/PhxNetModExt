@@ -41,7 +41,7 @@ public class AlarmManager {
 
     private final Map<String, AlarmObject> alarmObjects
             = new ConcurrentHashMap<>();
-    
+
     /**
      * A list that contains all active alarms
      */
@@ -68,14 +68,32 @@ public class AlarmManager {
         AlarmState oldState = a.getState();
         a.setState(state);
         a.setSuppressed(suppressed);
+        
+        // An alarm has to be acknowledged if the new state is of higher 
+        // priority than before.
+        if (state != AlarmState.NONE && oldState != null) {
+            if (oldState != state) {
+                a.setAcknowledged(ComparePriority.includes(oldState, state));
+            }
+        } else if (state != AlarmState.NONE && oldState == null) {
+            // new alarm object which is straight triggered
+            a.setAcknowledged(false);
+        } else if (state == AlarmState.NONE && oldState == null) {
+            // This new alarm object got fired but the alarm is not active.
+            a.setAcknowledged(true);
+        } else if (state == AlarmState.NONE && oldState != AlarmState.NONE ) {
+            // State switched to none - new acknowledge is necessary to clear.
+            a.setAcknowledged(false);
+        }
+        
 
         // Log all alarm events
         Logger.getLogger(AlarmManager.class.getName())
                 .log(Level.INFO, "Updated Alarm: " + component
                         + ", Old state: " + oldState
                         + ", New state: " + state);
-        
-        updateAlarmList();
+
+        updateAlarmList(); // why did i even do this
     }
 
     /**
@@ -105,22 +123,26 @@ public class AlarmManager {
         // check if equals or even a higher priority is active. 
         return ComparePriority.includes(alarmObject.getState(), state);
     }
+    
+    public void acknowledge() {
+        for (AlarmObject a : alarmObjects.values()) {
+            a.setAcknowledged(true);
+        }
+    }
 
     /**
      * Updates the contents of the alarm list which can be displayed in a swing
      * JList.
      */
     public void updateAlarmList() {
-        // Todo, make this with some kind of diff thingy
-        alarmList.clear();
-        for (AlarmObject a : alarmObjects.values()) { 
-            if (a != null && a.getState() != AlarmState.NONE
-                    && !a.isSuppressed()) { 
+        // not sure what I'm doing - TODO check this later
+        for (AlarmObject a : alarmObjects.values()) {
+            if (!alarmList.contains(a)) {
                 alarmList.add(a);
-            } 
+            }
         }
     }
-    
+
     public List getAlarmList() {
         return alarmList;
     }

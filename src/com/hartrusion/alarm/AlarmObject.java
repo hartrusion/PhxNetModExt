@@ -49,6 +49,9 @@ public class AlarmObject {
     }
 
     public String getDescription() {
+        if (description == null) {
+            return component;
+        }
         return description;
     }
 
@@ -70,5 +73,13 @@ public class AlarmObject {
 
     public void setSuppressed(boolean suppressed) {
         this.suppressed = suppressed;
+    }
+    
+    public boolean isAcknowledged() {
+        return acknowledged;
+    }
+    
+    public void setAcknowledged(boolean acknowledged) {
+        this.acknowledged = acknowledged;
     }
 }
