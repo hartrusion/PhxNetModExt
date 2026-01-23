@@ -62,7 +62,7 @@ public abstract class BaseAutomatedValve {
         swControl.setLowerLimit(-5.0);
     }
 
-    private String name = "unnamedAutomatedValve";
+    protected String name = "unnamedAutomatedValve";
 
     public void initName(String name) {
         this.name = name;
