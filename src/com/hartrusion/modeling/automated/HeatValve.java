@@ -37,6 +37,7 @@ public class HeatValve extends BaseAutomatedValve implements Runnable {
      */
     protected final HeatLinearValve valve = new HeatLinearValve();
 
+    @Override
     public void initName(String name) {
         super.initName(name);
         valve.setName(name);

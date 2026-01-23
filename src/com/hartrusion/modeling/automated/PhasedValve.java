@@ -16,14 +16,8 @@
  */
 package com.hartrusion.modeling.automated;
 
-import com.hartrusion.values.ValueHandler;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import com.hartrusion.control.SetpointIntegrator;
-import com.hartrusion.control.ValveActuatorMonitor;
 import com.hartrusion.modeling.phasedfluid.PhasedLinearValve;
-import com.hartrusion.mvc.ActionCommand;
 
 /**
  * HeatLinearValve with SetpointIntegrator as actuator and a Monitor for firing
@@ -38,13 +32,14 @@ public class PhasedValve extends BaseAutomatedValve implements Runnable {
      */
     protected final PhasedLinearValve valve = new PhasedLinearValve();
 
+    @Override
     public void initName(String name) {
         super.initName(name);
         valve.setName(name);
     }
 
     /**
-     * Initializes the valves characterisitc.
+     * Initializes the valves characteristic.
      *
      * @param resistanceFullOpen Flow resistance on 100 % opening state, given
      * in Pa/kg*s
